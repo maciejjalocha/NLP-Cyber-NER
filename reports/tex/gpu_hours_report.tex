@@ -1,0 +1,69 @@
+\section*{LUMI GPU-hours -- RoBERTa fine-tuning}
+
+This report summarizes the measured training time for the three RoBERTa fine-tuning experiments run on the LUMI-G partition: cross-dataset, combined, and multi-head training.
+
+\subsection*{Hardware and accounting unit}
+
+Each SLURM training job requested one accelerator with \texttt{--gpus-per-node=1}. On LUMI, the relevant accelerator accounting unit is the AMD MI250X \textbf{Graphics Compute Die (GCD)}. A physical MI250X module contains two GCDs, but these experiments were configured to use one GCD per running job.
+
+Accordingly, the values below are reported as \textbf{GCD-hours}. They are calculated from the \texttt{train\_runtime\_s} values written by the training scripts:
+
+\[
+\text{GCD-hours} = \frac{\text{training runtime in seconds}}{3600}
+\]
+
+These are pure measured training runtimes, not necessarily the final billed allocation reported by SLURM. The provided \texttt{gpu\_hours.sh} workflow notes that \texttt{sacct} reports zero GCD-hours on LUMI for these jobs, so the runtime values are used as the compute-only comparison.
+
+\subsection*{Training cost}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{0.18\linewidth}p{0.42\linewidth}rr}
+\toprule
+\textbf{Experiment} & \textbf{Training configuration} & \textbf{Runtime} & \textbf{Cost} \\
+\midrule
+Cross-dataset & 20 array tasks, one architecture/dataset model per task & 3,925 s & \textbf{1.09 GCD-h} \\
+Combined & One RoBERTa model trained on the unified union of four datasets & 4,145 s & \textbf{1.15 GCD-h} \\
+Multi-head & One shared RoBERTa encoder with four dataset-specific heads & 4,232 s & \textbf{1.18 GCD-h} \\
+\bottomrule
+\end{tabular}
+\caption{Compute-only RoBERTa fine-tuning costs measured on LUMI.}
+\label{tab:lumi_gpu_hours}
+\end{table}
+
+The cross-dataset value is the sum of the training runtimes from all 20 array tasks. It therefore represents aggregate accelerator time across the experiment, not elapsed wall-clock time for the SLURM array. Its maximum simultaneous accelerator usage depended on how many array tasks LUMI scheduled concurrently.
+
+\subsection*{Interpretation}
+
+The combined and multi-head experiments each used one GCD for a single training job. The multi-head model took 87 seconds longer than the combined model, an increase of approximately 2.1\%. The cross-dataset experiment required 3,925 aggregate training seconds across its 20 models, or 1.09 aggregate GCD-hours.
+
+The appropriate summary for the experiments is therefore:
+
+\begin{quote}
+RoBERTa fine-tuning used 1.09 aggregate GCD-hours for the cross-dataset experiment, 1.15 GCD-hours for the combined experiment, and 1.18 GCD-hours for the multi-head experiment, based on measured training runtime on one LUMI MI250X GCD per job.
+\end{quote}
+
+\subsection*{MI250X module-equivalent hours}
+
+Dividing the GCD-hours by two produces physical MI250X-module-equivalent hours, because each MI250X module contains two GCDs:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\textbf{Experiment} & \textbf{GCD-hours} & \textbf{MI250X-module-equivalent hours} \\
+\midrule
+Cross-dataset & 1.09 & 0.55 \\
+Combined & 1.15 & 0.58 \\
+Multi-head & 1.18 & 0.59 \\
+\bottomrule
+\end{tabular}
+\caption{Full MI250X-module-equivalent time, obtained by dividing GCD-hours by two.}
+\label{tab:lumi_mi250x_equivalent}
+\end{table}
+
+These divided values should only be used when reporting normalized full-module-equivalent time. They should not replace GCD-hours in the primary report, since the jobs allocated one GCD rather than a complete two-GCD MI250X module.
+
+\subsection*{Reproducibility}
+
+The measurements were obtained with \texttt{lumi/gpu\_hours.sh} for the cross-dataset array, \texttt{lumi/gpu\_hours\_combined.sh} for the combined model, and \texttt{lumi/gpu\_hours\_multihead.sh} for the multi-head model. The first attempted multi-head command included an extra \texttt{.sh} suffix and failed because \texttt{lumi/gpu\_hours\_multihead.sh.sh} does not exist; the subsequent invocation of the correct script produced the reported 4,232-second runtime.
