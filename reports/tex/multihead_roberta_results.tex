@@ -17,7 +17,7 @@ BiLSTM columns are reproduced from the paper for comparison; the RoBERTa column 
 \midrule
 DNRTI    & 0.43 & 0.52 & 0.52 & 0.45 & \textbf{0.61} \\
 ATTACKER & 0.01 & 0.19 & 0.21 & 0.04 & \textbf{0.42} \\
-APTNER   & 0.36 & 0.38 & 0.37 & 0.35 & \textbf{0.44} \\
+APTNER   & 0.36 & 0.38 & 0.37 & 0.35 & \textbf{0.60} \\
 CYNER    & 0.34 & 0.41 & 0.39 & 0.40 & \textbf{0.80} \\
 \bottomrule
 \end{tabular}
@@ -41,7 +41,7 @@ Strict span-F1 with its precision and recall, plus the unlabelled and loose (par
 \midrule
 DNRTI    & 0.63 & 0.59 & 0.61 & 0.68 & 0.69 \\
 ATTACKER & 0.44 & 0.41 & 0.42 & 0.54 & 0.54 \\
-APTNER   & 0.38 & 0.51 & 0.44 & 0.49 & 0.52 \\
+APTNER   & 0.57 & 0.63 & 0.60 & 0.71 & 0.67 \\
 CYNER    & 0.80 & 0.79 & 0.80 & 0.84 & 0.84 \\
 \bottomrule
 \end{tabular}
@@ -50,4 +50,49 @@ CYNER    & 0.80 & 0.79 & 0.80 & 0.84 & 0.84 \\
 \label{tab:multihead_roberta_metrics}
 \end{table}
 
-APTNER is the only dataset where recall (0.51) exceeds precision (0.38); the others are roughly balanced. CYNER is strongest across every metric.
+APTNER was rescored after converting its native BIOES tags (\texttt{S-X} to \texttt{B-X} and \texttt{E-X} to \texttt{I-X}), because \texttt{span\_f1} expects BIO tags. Its corrected score is precision 0.57, recall 0.63, and span-F1 0.60. The original reported APTNER value (0.44) was therefore an incompatible BIOES scoring result. The other datasets use BIO-compatible labels and are unchanged. CYNER is strongest across every metric.
+
+\subsection*{Single-dataset non-merged RoBERTa reference}
+
+For comparison, the diagonal single-dataset RoBERTa predictions were rescored against each dataset's original-label development set. APTNER \texttt{S/E} tags were normalized to \texttt{B/I} before calling \texttt{span\_f1}; the models and predictions were not changed.
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Dataset} & \textbf{Precision} & \textbf{Recall} & \textbf{Span-F1} & \textbf{Unlabelled F1} & \textbf{Loose F1} \\
+\midrule
+DNRTI    & 0.6164 & 0.6243 & \textbf{0.6203} & 0.7004 & 0.6919 \\
+ATTACKER & 0.4257 & 0.4246 & \textbf{0.4252} & 0.5338 & 0.5635 \\
+APTNER   & 0.5609 & 0.6189 & \textbf{0.5885} & 0.7084 & 0.6618 \\
+CYNER    & 0.7738 & 0.7624 & \textbf{0.7681} & 0.8411 & 0.8093 \\
+\bottomrule
+\end{tabular}
+}%
+\caption{Single-dataset RoBERTa reference results using original labels without label merging.}
+\label{tab:single_dataset_roberta_reference}
+\end{table}
+
+Source: \texttt{models/single\_dataset\_reference\_metrics.json}.
+
+\subsection*{RoBERTa multi-head versus single-dataset reference}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Dataset} & \textbf{Reference span-F1} & \textbf{Multi-head span-F1} & \textbf{Difference} \\
+\midrule
+DNRTI    & 0.6203 & 0.61 & -0.0103 \\
+ATTACKER & 0.4252 & 0.42 & -0.0052 \\
+APTNER   & 0.5885 & 0.60 & \textbf{+0.0115} \\
+CYNER    & 0.7681 & 0.80 & \textbf{+0.0319} \\
+\bottomrule
+\end{tabular}
+\caption{RoBERTa multi-head versus single-dataset non-merged reference span-F1.}
+\label{tab:roberta_multihead_vs_reference}
+\end{table}
+
+Difference is multi-head minus single-dataset reference. Both columns use original-label
+evaluation; APTNER tags were normalized from BIOES to BIO before scoring.

@@ -1,0 +1,22 @@
+{
+  "dataset": "APTNER",
+  "model": "multi-head RoBERTa",
+  "prediction_file": "data/train-multihead-roberta-eval-APTNer.txt",
+  "gold_file": "data/interim/APTNer/APTNERdev.cleaned",
+  "normalization": {
+    "S": "B",
+    "E": "I"
+  },
+  "metric": "nlp_cyber_ner.span_f1.span_f1",
+  "metrics": {
+    "recall": 0.6274918179113359,
+    "precision": 0.5748160261651676,
+    "slot-f1": 0.5999999999999999,
+    "ul_recall": 0.74561142517108,
+    "ul_precision": 0.6830198964295449,
+    "ul_slot-f1": 0.7129445234708393,
+    "l_recall": 0.7006843201428147,
+    "l_precision": 0.6500408830744072,
+    "l_slot-f1": 0.6744132013486643
+  }
+}
