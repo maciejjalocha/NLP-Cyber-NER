@@ -21,8 +21,8 @@ of the four valid sets. Evaluation is per-dataset span-F1 on that dataset's orig
 """
 
 import argparse
-import json
 from itertools import cycle
+import json
 import os
 from pathlib import Path
 import random
@@ -139,7 +139,6 @@ def train(model, train_loaders, total_batches, probs, epochs, device, lr, max_gr
     for epoch in range(int(epochs)):
         model.train()
         logger.info(f"Epoch {epoch + 1}/{int(epochs)}")
-        # Fresh infinite iterators each epoch so cycle re-shuffles (loaders have shuffle=True).
         loader_iters = {name: cycle(loader) for name, loader in train_loaders.items()}
         sampled = np.random.choice(datasets, size=total_batches, p=probs)  # with replacement
 
