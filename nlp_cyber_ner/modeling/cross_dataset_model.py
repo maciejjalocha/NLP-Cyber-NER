@@ -7,7 +7,6 @@ from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from nlp_cyber_ner.config import (
-    ARTIFACTS_DIR,
     DATA_DIR,
     MODELS_DIR,
     PROCESSED_DATA_DIR,
@@ -289,8 +288,8 @@ for train_pack_name, train_data in train_packs:
 
             metrics = evaluate(dev_labels, labels_dev)
 
-            store_preds_path = ARTIFACTS_DIR / "predictions" / f"{name}.txt"
-            store_trains_path = ARTIFACTS_DIR / "train" / f"{name}.txt"
+            store_preds_path = MODELS_DIR / "predictions" / f"{name}.txt"
+            store_trains_path = MODELS_DIR / "train" / f"{name}.txt"
 
             list_to_conll(dev_tokens, labels_dev, store_preds_path)  # type: ignore
             train_tokens, train_labels = list(zip(*train_data))

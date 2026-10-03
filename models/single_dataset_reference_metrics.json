@@ -1,0 +1,1001 @@
+{
+  "model": "single-dataset RoBERTa",
+  "evaluation": "original labels, non-merged",
+  "metric": "nlp_cyber_ner.span_f1.span_f1",
+  "results": {
+    "DNRTI": {
+      "gold_file": "data/interim/DNRTI/valid.cleaned",
+      "prediction_file": "models/predictions/RoBERTa-train-dnrti-eval-dnrti.raw.txt",
+      "normalization": null,
+      "validation_mapping": {
+        "dropped_entity_tokens": 1162,
+        "total_entity_tokens": 3293,
+        "dropped_entity_token_ratio": 0.35286972365624053
+      },
+      "label_mapping_breakdown": {
+        "Area": {
+          "entity_tokens": 192,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "Exp": {
+          "entity_tokens": 172,
+          "maps_to": "Vulnerability",
+          "status": "bundled/retained"
+        },
+        "Features": {
+          "entity_tokens": 184,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "HackOrg": {
+          "entity_tokens": 567,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "Idus": {
+          "entity_tokens": 140,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "OffAct": {
+          "entity_tokens": 165,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "Org": {
+          "entity_tokens": 180,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "Purp": {
+          "entity_tokens": 212,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "SamFile": {
+          "entity_tokens": 280,
+          "maps_to": "Malware",
+          "status": "bundled/retained"
+        },
+        "SecTeam": {
+          "entity_tokens": 243,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "Time": {
+          "entity_tokens": 269,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "Tool": {
+          "entity_tokens": 473,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "Way": {
+          "entity_tokens": 216,
+          "maps_to": "Vulnerability",
+          "status": "bundled/retained"
+        }
+      },
+      "label_confusion": {
+        "top_original_label_confusions": [
+          {
+            "gold": "Tool",
+            "predicted": "O",
+            "tokens": 148
+          },
+          {
+            "gold": "Purp",
+            "predicted": "O",
+            "tokens": 143
+          },
+          {
+            "gold": "Features",
+            "predicted": "O",
+            "tokens": 85
+          },
+          {
+            "gold": "HackOrg",
+            "predicted": "O",
+            "tokens": 81
+          },
+          {
+            "gold": "SamFile",
+            "predicted": "O",
+            "tokens": 78
+          },
+          {
+            "gold": "Way",
+            "predicted": "O",
+            "tokens": 69
+          },
+          {
+            "gold": "SamFile",
+            "predicted": "Tool",
+            "tokens": 68
+          },
+          {
+            "gold": "OffAct",
+            "predicted": "O",
+            "tokens": 43
+          },
+          {
+            "gold": "Org",
+            "predicted": "O",
+            "tokens": 34
+          },
+          {
+            "gold": "SecTeam",
+            "predicted": "O",
+            "tokens": 25
+          },
+          {
+            "gold": "HackOrg",
+            "predicted": "Tool",
+            "tokens": 24
+          },
+          {
+            "gold": "Tool",
+            "predicted": "SamFile",
+            "tokens": 23
+          },
+          {
+            "gold": "Way",
+            "predicted": "Tool",
+            "tokens": 23
+          },
+          {
+            "gold": "Idus",
+            "predicted": "O",
+            "tokens": 20
+          },
+          {
+            "gold": "Exp",
+            "predicted": "O",
+            "tokens": 19
+          },
+          {
+            "gold": "Time",
+            "predicted": "O",
+            "tokens": 19
+          },
+          {
+            "gold": "Idus",
+            "predicted": "Org",
+            "tokens": 17
+          },
+          {
+            "gold": "Features",
+            "predicted": "Tool",
+            "tokens": 15
+          },
+          {
+            "gold": "Tool",
+            "predicted": "HackOrg",
+            "tokens": 13
+          },
+          {
+            "gold": "Area",
+            "predicted": "O",
+            "tokens": 12
+          }
+        ],
+        "dropped_gold_label_predictions": {
+          "Time": {
+            "gold_entity_tokens": 269,
+            "predicted_as_o": 19,
+            "predicted_as_entity": 250,
+            "predicted_as_o_ratio": 0.07063197026022305
+          },
+          "Purp": {
+            "gold_entity_tokens": 212,
+            "predicted_as_o": 143,
+            "predicted_as_entity": 69,
+            "predicted_as_o_ratio": 0.6745283018867925
+          },
+          "Area": {
+            "gold_entity_tokens": 192,
+            "predicted_as_o": 12,
+            "predicted_as_entity": 180,
+            "predicted_as_o_ratio": 0.0625
+          },
+          "Features": {
+            "gold_entity_tokens": 184,
+            "predicted_as_o": 85,
+            "predicted_as_entity": 99,
+            "predicted_as_o_ratio": 0.46195652173913043
+          },
+          "OffAct": {
+            "gold_entity_tokens": 165,
+            "predicted_as_o": 43,
+            "predicted_as_entity": 122,
+            "predicted_as_o_ratio": 0.2606060606060606
+          },
+          "Idus": {
+            "gold_entity_tokens": 140,
+            "predicted_as_o": 20,
+            "predicted_as_entity": 120,
+            "predicted_as_o_ratio": 0.14285714285714285
+          }
+        }
+      },
+      "metrics": {
+        "recall": 0.6243093922651933,
+        "precision": 0.6163636363636363,
+        "slot-f1": 0.6203110704483074,
+        "ul_recall": 0.7048802946593001,
+        "ul_precision": 0.6959090909090909,
+        "ul_slot-f1": 0.7003659652333029,
+        "l_recall": 0.6970534069981584,
+        "l_precision": 0.6868181818181818,
+        "l_slot-f1": 0.6918979441353084
+      }
+    },
+    "ATTACKER": {
+      "gold_file": "data/interim/attacker/valid.cleaned",
+      "prediction_file": "models/predictions/RoBERTa-train-attacker-eval-attacker.raw.txt",
+      "normalization": null,
+      "validation_mapping": {
+        "dropped_entity_tokens": 3036,
+        "total_entity_tokens": 3952,
+        "dropped_entity_token_ratio": 0.7682186234817814
+      },
+      "label_mapping_breakdown": {
+        "ATTACK_MOTIVATION": {
+          "entity_tokens": 202,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "ATTACK_PATTERN": {
+          "entity_tokens": 1181,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "ATTACK_RESOURCE_LEVEL": {
+          "entity_tokens": 8,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "ATTACK_SOPHISTICATION_LEVEL": {
+          "entity_tokens": 56,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "ATTACK_TOOL": {
+          "entity_tokens": 100,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "CAMPAIGN": {
+          "entity_tokens": 26,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "COURSE_OF_ACTION": {
+          "entity_tokens": 447,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "GENERAL_IDENTITY": {
+          "entity_tokens": 189,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "GENERAL_TOOL": {
+          "entity_tokens": 72,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "IMPACT": {
+          "entity_tokens": 296,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "INDICATOR": {
+          "entity_tokens": 148,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "INFRASTRUCTURE": {
+          "entity_tokens": 129,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "INTRUSION_SET": {
+          "entity_tokens": 68,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "LOCATION": {
+          "entity_tokens": 28,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "MALWARE": {
+          "entity_tokens": 133,
+          "maps_to": "Malware",
+          "status": "bundled/retained"
+        },
+        "MALWARE_ANALYSIS": {
+          "entity_tokens": 227,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "OBSERVED_DATA": {
+          "entity_tokens": 232,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "THREAT_ACTOR": {
+          "entity_tokens": 142,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "VICTIM_IDENTITY": {
+          "entity_tokens": 117,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "VULNERABILITY": {
+          "entity_tokens": 151,
+          "maps_to": "Vulnerability",
+          "status": "bundled/retained"
+        }
+      },
+      "label_confusion": {
+        "top_original_label_confusions": [
+          {
+            "gold": "ATTACK_PATTERN",
+            "predicted": "O",
+            "tokens": 424
+          },
+          {
+            "gold": "COURSE_OF_ACTION",
+            "predicted": "O",
+            "tokens": 128
+          },
+          {
+            "gold": "ATTACK_MOTIVATION",
+            "predicted": "O",
+            "tokens": 114
+          },
+          {
+            "gold": "IMPACT",
+            "predicted": "O",
+            "tokens": 114
+          },
+          {
+            "gold": "OBSERVED_DATA",
+            "predicted": "O",
+            "tokens": 81
+          },
+          {
+            "gold": "INDICATOR",
+            "predicted": "O",
+            "tokens": 76
+          },
+          {
+            "gold": "VULNERABILITY",
+            "predicted": "O",
+            "tokens": 55
+          },
+          {
+            "gold": "ATTACK_PATTERN",
+            "predicted": "OBSERVED_DATA",
+            "tokens": 41
+          },
+          {
+            "gold": "OBSERVED_DATA",
+            "predicted": "ATTACK_PATTERN",
+            "tokens": 37
+          },
+          {
+            "gold": "INFRASTRUCTURE",
+            "predicted": "O",
+            "tokens": 37
+          },
+          {
+            "gold": "MALWARE_ANALYSIS",
+            "predicted": "ATTACK_PATTERN",
+            "tokens": 36
+          },
+          {
+            "gold": "MALWARE_ANALYSIS",
+            "predicted": "O",
+            "tokens": 34
+          },
+          {
+            "gold": "ATTACK_SOPHISTICATION_LEVEL",
+            "predicted": "O",
+            "tokens": 32
+          },
+          {
+            "gold": "IMPACT",
+            "predicted": "ATTACK_PATTERN",
+            "tokens": 31
+          },
+          {
+            "gold": "ATTACK_PATTERN",
+            "predicted": "ATTACK_MOTIVATION",
+            "tokens": 25
+          },
+          {
+            "gold": "INTRUSION_SET",
+            "predicted": "O",
+            "tokens": 22
+          },
+          {
+            "gold": "ATTACK_TOOL",
+            "predicted": "O",
+            "tokens": 22
+          },
+          {
+            "gold": "VICTIM_IDENTITY",
+            "predicted": "O",
+            "tokens": 21
+          },
+          {
+            "gold": "GENERAL_IDENTITY",
+            "predicted": "O",
+            "tokens": 20
+          },
+          {
+            "gold": "ATTACK_PATTERN",
+            "predicted": "COURSE_OF_ACTION",
+            "tokens": 20
+          }
+        ],
+        "dropped_gold_label_predictions": {
+          "ATTACK_PATTERN": {
+            "gold_entity_tokens": 1181,
+            "predicted_as_o": 424,
+            "predicted_as_entity": 757,
+            "predicted_as_o_ratio": 0.3590177815410669
+          },
+          "COURSE_OF_ACTION": {
+            "gold_entity_tokens": 447,
+            "predicted_as_o": 128,
+            "predicted_as_entity": 319,
+            "predicted_as_o_ratio": 0.28635346756152125
+          },
+          "IMPACT": {
+            "gold_entity_tokens": 296,
+            "predicted_as_o": 114,
+            "predicted_as_entity": 182,
+            "predicted_as_o_ratio": 0.38513513513513514
+          },
+          "OBSERVED_DATA": {
+            "gold_entity_tokens": 232,
+            "predicted_as_o": 81,
+            "predicted_as_entity": 151,
+            "predicted_as_o_ratio": 0.34913793103448276
+          },
+          "MALWARE_ANALYSIS": {
+            "gold_entity_tokens": 227,
+            "predicted_as_o": 34,
+            "predicted_as_entity": 193,
+            "predicted_as_o_ratio": 0.14977973568281938
+          },
+          "ATTACK_MOTIVATION": {
+            "gold_entity_tokens": 202,
+            "predicted_as_o": 114,
+            "predicted_as_entity": 88,
+            "predicted_as_o_ratio": 0.5643564356435643
+          },
+          "INDICATOR": {
+            "gold_entity_tokens": 148,
+            "predicted_as_o": 76,
+            "predicted_as_entity": 72,
+            "predicted_as_o_ratio": 0.5135135135135135
+          },
+          "VICTIM_IDENTITY": {
+            "gold_entity_tokens": 117,
+            "predicted_as_o": 21,
+            "predicted_as_entity": 96,
+            "predicted_as_o_ratio": 0.1794871794871795
+          },
+          "INTRUSION_SET": {
+            "gold_entity_tokens": 68,
+            "predicted_as_o": 22,
+            "predicted_as_entity": 46,
+            "predicted_as_o_ratio": 0.3235294117647059
+          },
+          "ATTACK_SOPHISTICATION_LEVEL": {
+            "gold_entity_tokens": 56,
+            "predicted_as_o": 32,
+            "predicted_as_entity": 24,
+            "predicted_as_o_ratio": 0.5714285714285714
+          },
+          "LOCATION": {
+            "gold_entity_tokens": 28,
+            "predicted_as_o": 3,
+            "predicted_as_entity": 25,
+            "predicted_as_o_ratio": 0.10714285714285714
+          },
+          "CAMPAIGN": {
+            "gold_entity_tokens": 26,
+            "predicted_as_o": 5,
+            "predicted_as_entity": 21,
+            "predicted_as_o_ratio": 0.19230769230769232
+          },
+          "ATTACK_RESOURCE_LEVEL": {
+            "gold_entity_tokens": 8,
+            "predicted_as_o": 6,
+            "predicted_as_entity": 2,
+            "predicted_as_o_ratio": 0.75
+          }
+        }
+      },
+      "metrics": {
+        "recall": 0.4246031746031746,
+        "precision": 0.42572944297082227,
+        "slot-f1": 0.4251655629139073,
+        "ul_recall": 0.533068783068783,
+        "ul_precision": 0.5344827586206896,
+        "ul_slot-f1": 0.533774834437086,
+        "l_recall": 0.5568783068783069,
+        "l_precision": 0.5702917771883289,
+        "l_slot-f1": 0.5635052310144214
+      }
+    },
+    "APTNER": {
+      "gold_file": "data/interim/APTNer/APTNERdev.cleaned",
+      "prediction_file": "models/predictions/RoBERTa-train-APTNer-eval-APTNer.raw.txt",
+      "normalization": {
+        "S": "B",
+        "E": "I"
+      },
+      "validation_mapping": {
+        "dropped_entity_tokens": 3397,
+        "total_entity_tokens": 4541,
+        "dropped_entity_token_ratio": 0.7480731116494165
+      },
+      "label_mapping_breakdown": {
+        "ACT": {
+          "entity_tokens": 144,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "APT": {
+          "entity_tokens": 477,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "DOM": {
+          "entity_tokens": 87,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "ENCR": {
+          "entity_tokens": 62,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "FILE": {
+          "entity_tokens": 275,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "IDTY": {
+          "entity_tokens": 583,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "IP": {
+          "entity_tokens": 62,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "LOC": {
+          "entity_tokens": 329,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "MAL": {
+          "entity_tokens": 444,
+          "maps_to": "Malware",
+          "status": "bundled/retained"
+        },
+        "MD5": {
+          "entity_tokens": 66,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "OS": {
+          "entity_tokens": 81,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "PROT": {
+          "entity_tokens": 100,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "SECTEAM": {
+          "entity_tokens": 123,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "SHA1": {
+          "entity_tokens": 9,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "SHA2": {
+          "entity_tokens": 66,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "TIME": {
+          "entity_tokens": 466,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "TOOL": {
+          "entity_tokens": 1099,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "URL": {
+          "entity_tokens": 25,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "VULID": {
+          "entity_tokens": 24,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "VULNAME": {
+          "entity_tokens": 19,
+          "maps_to": "Vulnerability",
+          "status": "bundled/retained"
+        }
+      },
+      "label_confusion": {
+        "top_original_label_confusions": [
+          {
+            "gold": "TOOL",
+            "predicted": "O",
+            "tokens": 377
+          },
+          {
+            "gold": "TOOL",
+            "predicted": "MAL",
+            "tokens": 190
+          },
+          {
+            "gold": "IDTY",
+            "predicted": "O",
+            "tokens": 169
+          },
+          {
+            "gold": "IDTY",
+            "predicted": "SECTEAM",
+            "tokens": 66
+          },
+          {
+            "gold": "TIME",
+            "predicted": "O",
+            "tokens": 58
+          },
+          {
+            "gold": "MAL",
+            "predicted": "APT",
+            "tokens": 58
+          },
+          {
+            "gold": "MAL",
+            "predicted": "O",
+            "tokens": 53
+          },
+          {
+            "gold": "LOC",
+            "predicted": "O",
+            "tokens": 40
+          },
+          {
+            "gold": "IDTY",
+            "predicted": "LOC",
+            "tokens": 37
+          },
+          {
+            "gold": "APT",
+            "predicted": "O",
+            "tokens": 36
+          },
+          {
+            "gold": "IDTY",
+            "predicted": "TOOL",
+            "tokens": 29
+          },
+          {
+            "gold": "APT",
+            "predicted": "ACT",
+            "tokens": 27
+          },
+          {
+            "gold": "PROT",
+            "predicted": "O",
+            "tokens": 25
+          },
+          {
+            "gold": "ACT",
+            "predicted": "O",
+            "tokens": 25
+          },
+          {
+            "gold": "TOOL",
+            "predicted": "FILE",
+            "tokens": 24
+          },
+          {
+            "gold": "TOOL",
+            "predicted": "ACT",
+            "tokens": 21
+          },
+          {
+            "gold": "SHA2",
+            "predicted": "O",
+            "tokens": 21
+          },
+          {
+            "gold": "FILE",
+            "predicted": "O",
+            "tokens": 19
+          },
+          {
+            "gold": "MAL",
+            "predicted": "TOOL",
+            "tokens": 16
+          },
+          {
+            "gold": "PROT",
+            "predicted": "TOOL",
+            "tokens": 13
+          }
+        ],
+        "dropped_gold_label_predictions": {
+          "TOOL": {
+            "gold_entity_tokens": 1099,
+            "predicted_as_o": 377,
+            "predicted_as_entity": 722,
+            "predicted_as_o_ratio": 0.34303912647861695
+          },
+          "IDTY": {
+            "gold_entity_tokens": 583,
+            "predicted_as_o": 169,
+            "predicted_as_entity": 414,
+            "predicted_as_o_ratio": 0.28987993138936535
+          },
+          "TIME": {
+            "gold_entity_tokens": 466,
+            "predicted_as_o": 58,
+            "predicted_as_entity": 408,
+            "predicted_as_o_ratio": 0.12446351931330472
+          },
+          "LOC": {
+            "gold_entity_tokens": 329,
+            "predicted_as_o": 40,
+            "predicted_as_entity": 289,
+            "predicted_as_o_ratio": 0.12158054711246201
+          },
+          "FILE": {
+            "gold_entity_tokens": 275,
+            "predicted_as_o": 19,
+            "predicted_as_entity": 256,
+            "predicted_as_o_ratio": 0.06909090909090909
+          },
+          "ACT": {
+            "gold_entity_tokens": 144,
+            "predicted_as_o": 25,
+            "predicted_as_entity": 119,
+            "predicted_as_o_ratio": 0.1736111111111111
+          },
+          "PROT": {
+            "gold_entity_tokens": 100,
+            "predicted_as_o": 25,
+            "predicted_as_entity": 75,
+            "predicted_as_o_ratio": 0.25
+          },
+          "DOM": {
+            "gold_entity_tokens": 87,
+            "predicted_as_o": 7,
+            "predicted_as_entity": 80,
+            "predicted_as_o_ratio": 0.08045977011494253
+          },
+          "SHA2": {
+            "gold_entity_tokens": 66,
+            "predicted_as_o": 21,
+            "predicted_as_entity": 45,
+            "predicted_as_o_ratio": 0.3181818181818182
+          },
+          "MD5": {
+            "gold_entity_tokens": 66,
+            "predicted_as_o": 0,
+            "predicted_as_entity": 66,
+            "predicted_as_o_ratio": 0.0
+          },
+          "ENCR": {
+            "gold_entity_tokens": 62,
+            "predicted_as_o": 6,
+            "predicted_as_entity": 56,
+            "predicted_as_o_ratio": 0.0967741935483871
+          },
+          "IP": {
+            "gold_entity_tokens": 62,
+            "predicted_as_o": 2,
+            "predicted_as_entity": 60,
+            "predicted_as_o_ratio": 0.03225806451612903
+          },
+          "URL": {
+            "gold_entity_tokens": 25,
+            "predicted_as_o": 5,
+            "predicted_as_entity": 20,
+            "predicted_as_o_ratio": 0.2
+          },
+          "VULID": {
+            "gold_entity_tokens": 24,
+            "predicted_as_o": 0,
+            "predicted_as_entity": 24,
+            "predicted_as_o_ratio": 0.0
+          },
+          "SHA1": {
+            "gold_entity_tokens": 9,
+            "predicted_as_o": 0,
+            "predicted_as_entity": 9,
+            "predicted_as_o_ratio": 0.0
+          }
+        }
+      },
+      "metrics": {
+        "recall": 0.618863433501934,
+        "precision": 0.5609492988133765,
+        "slot-f1": 0.5884849342198332,
+        "ul_recall": 0.7450163641773282,
+        "ul_precision": 0.6752966558791802,
+        "ul_slot-f1": 0.7084453246569529,
+        "l_recall": 0.6920559357334126,
+        "l_precision": 0.63403451995685,
+        "l_slot-f1": 0.6617759009020592
+      }
+    },
+    "CYNER": {
+      "gold_file": "data/raw/cyner/valid.txt",
+      "prediction_file": "models/predictions/RoBERTa-train-cyner-eval-cyner.raw.txt",
+      "normalization": null,
+      "validation_mapping": {
+        "dropped_entity_tokens": 455,
+        "total_entity_tokens": 1169,
+        "dropped_entity_token_ratio": 0.38922155688622756
+      },
+      "label_mapping_breakdown": {
+        "Indicator": {
+          "entity_tokens": 455,
+          "maps_to": "O",
+          "status": "dropped"
+        },
+        "Malware": {
+          "entity_tokens": 265,
+          "maps_to": "Malware",
+          "status": "bundled/retained"
+        },
+        "Organization": {
+          "entity_tokens": 162,
+          "maps_to": "Organization",
+          "status": "bundled/retained"
+        },
+        "System": {
+          "entity_tokens": 273,
+          "maps_to": "System",
+          "status": "bundled/retained"
+        },
+        "Vulnerability": {
+          "entity_tokens": 14,
+          "maps_to": "Vulnerability",
+          "status": "bundled/retained"
+        }
+      },
+      "label_confusion": {
+        "top_original_label_confusions": [
+          {
+            "gold": "Organization",
+            "predicted": "O",
+            "tokens": 53
+          },
+          {
+            "gold": "Malware",
+            "predicted": "O",
+            "tokens": 39
+          },
+          {
+            "gold": "Indicator",
+            "predicted": "O",
+            "tokens": 38
+          },
+          {
+            "gold": "System",
+            "predicted": "O",
+            "tokens": 35
+          },
+          {
+            "gold": "Organization",
+            "predicted": "Malware",
+            "tokens": 20
+          },
+          {
+            "gold": "Organization",
+            "predicted": "System",
+            "tokens": 18
+          },
+          {
+            "gold": "Malware",
+            "predicted": "System",
+            "tokens": 17
+          },
+          {
+            "gold": "System",
+            "predicted": "Malware",
+            "tokens": 12
+          },
+          {
+            "gold": "System",
+            "predicted": "Organization",
+            "tokens": 9
+          },
+          {
+            "gold": "Malware",
+            "predicted": "Indicator",
+            "tokens": 7
+          },
+          {
+            "gold": "System",
+            "predicted": "Indicator",
+            "tokens": 6
+          },
+          {
+            "gold": "Vulnerability",
+            "predicted": "O",
+            "tokens": 3
+          },
+          {
+            "gold": "Organization",
+            "predicted": "Indicator",
+            "tokens": 2
+          },
+          {
+            "gold": "Indicator",
+            "predicted": "Malware",
+            "tokens": 1
+          },
+          {
+            "gold": "Malware",
+            "predicted": "Organization",
+            "tokens": 1
+          }
+        ],
+        "dropped_gold_label_predictions": {
+          "Indicator": {
+            "gold_entity_tokens": 455,
+            "predicted_as_o": 38,
+            "predicted_as_entity": 417,
+            "predicted_as_o_ratio": 0.08351648351648351
+          }
+        }
+      },
+      "metrics": {
+        "recall": 0.7624161073825504,
+        "precision": 0.773841961852861,
+        "slot-f1": 0.7680865449628128,
+        "ul_recall": 0.8348993288590604,
+        "ul_precision": 0.8474114441416893,
+        "ul_slot-f1": 0.8411088573360378,
+        "l_recall": 0.8013422818791947,
+        "l_precision": 0.8174386920980926,
+        "l_slot-f1": 0.8093104593548562
+      }
+    }
+  }
+}

@@ -1,0 +1,158 @@
+\section*{Cross-dataset RoBERTa -- notes}
+
+Transformer counterpart of the BiLSTM cross-dataset experiment (paper Section ``Cross-Dataset Evaluation Setup'', Tables \texttt{tab:cross\_eval\_matrix}, \texttt{\_precision}, \texttt{\_recall}, \texttt{tab:unlabelled-span-f1-cross-dataset}, \texttt{tab:loose-span-f1-cross-dataset}).
+
+\begin{itemize}
+\item Fine-tuned \textbf{RoBERTa} separately on each of the four datasets, on each dataset's \textbf{original} label set; evaluated every model on all four development sets, producing $4\times4$ span-F1 matrices (diagonal = intra-dataset, off-diagonal = cross-dataset).
+\item Unified four-class space (Organization / System / Vulnerability / Malware) applied \textbf{after inference} by \textit{probability-sum late merge}: sum softmax probabilities of each coarse class's fine-grained children, then take the argmax.
+\item Recipe: batch 2, learning rate $2\times10^{-5}$, 10 epochs, linear schedule, warmup 0, seed 42, maximum length 512, bf16.
+\item \textbf{Union-leakage removal}: each training set drops sentences whose tokens appear in any of the four development sets, so all evaluation columns are full and leakage-free (counts in appendix).
+\item Source: \texttt{models/cross\_retrained/REPORT.md} (RoBERTa), MLflow \texttt{retrained-cross-RoBERTa}.
+\end{itemize}
+
+Train datasets are on rows, development datasets on columns, and diagonal values are in \textbf{bold}.
+
+\subsection*{Span-F1 (versus paper Table \texttt{tab:cross\_eval\_matrix})}
+
+\textbf{RoBERTa}
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.63} & 0.30 & 0.21 & 0.16 \\
+\textbf{ATTACKER} & 0.34 & \textbf{0.61} & 0.26 & 0.37 \\
+\textbf{APTNER}   & 0.39 & 0.32 & \textbf{0.59} & 0.55 \\
+\textbf{CYNER}    & 0.25 & 0.24 & 0.32 & \textbf{0.73} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{RoBERTa span-F1 on each development dataset after training on each dataset.}
+\label{tab:cross_eval_matrix_roberta}
+\end{table}
+
+\textbf{BiLSTM (paper)}
+
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.41} & 0.16 & 0.19 & 0.07 \\
+\textbf{ATTACKER} & 0.09 & \textbf{0.23} & 0.01 & 0.02 \\
+\textbf{APTNER}   & 0.31 & 0.16 & \textbf{0.41} & 0.18 \\
+\textbf{CYNER}    & 0.05 & 0.04 & 0.06 & \textbf{0.40} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{BiLSTM span-F1 on each development dataset after training on each dataset.}
+\label{tab:cross_eval_matrix_bilstm}
+\end{table}
+
+Diagonals: DNRTI 0.41 to 0.63, ATTACKER 0.23 to 0.61, APTNER 0.41 to 0.59, and CYNER 0.40 to 0.73.
+
+No off-diagonal beats its column diagonal (the same holds for BiLSTM).
+
+The highest off-diagonal region is APTNER--DNRTI (APTNER to DNRTI: 0.39). The results are leakage-clean.
+
+\subsection*{Precision / Recall (versus paper Tables \texttt{\_precision}, \texttt{\_recall})}
+
+\textbf{RoBERTa precision}
+
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.63} & 0.29 & 0.15 & 0.13 \\
+\textbf{ATTACKER} & 0.38 & \textbf{0.61} & 0.20 & 0.31 \\
+\textbf{APTNER}   & 0.48 & 0.40 & \textbf{0.51} & 0.58 \\
+\textbf{CYNER}    & 0.30 & 0.29 & 0.28 & \textbf{0.76} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{RoBERTa precision on each development dataset after training on each dataset.}
+\label{tab:cross_eval_matrix_precision_roberta}
+\end{table}
+
+\textbf{RoBERTa recall}
+
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.64} & 0.32 & 0.38 & 0.21 \\
+\textbf{ATTACKER} & 0.32 & \textbf{0.62} & 0.40 & 0.45 \\
+\textbf{APTNER}   & 0.33 & 0.27 & \textbf{0.69} & 0.52 \\
+\textbf{CYNER}    & 0.22 & 0.21 & 0.37 & \textbf{0.71} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{RoBERTa recall on each development dataset after training on each dataset.}
+\label{tab:cross_eval_matrix_recall_roberta}
+\end{table}
+
+Diagonal precision and recall are roughly balanced (the BiLSTM was precision-dominant). APTNER is recall-leaning (0.69 versus 0.51).
+
+\subsection*{Unlabelled / loose span-F1 (versus paper Tables \texttt{\_unlabelled}, \texttt{\_loose})}
+
+\textbf{RoBERTa unlabelled} (boundaries correct, label ignored)
+
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.71} & 0.43 & 0.37 & 0.44 \\
+\textbf{ATTACKER} & 0.55 & \textbf{0.67} & 0.36 & 0.48 \\
+\textbf{APTNER}   & 0.55 & 0.45 & \textbf{0.66} & 0.60 \\
+\textbf{CYNER}    & 0.57 & 0.42 & 0.58 & \textbf{0.82} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{RoBERTa unlabelled span-F1 on each development dataset after training on each dataset.}
+\label{tab:unlabelled_span_f1_cross_dataset_roberta}
+\end{table}
+
+\textbf{RoBERTa loose} (partial overlap, same label)
+
+
+\begin{table}[h!]
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Train \textbackslash Dev} & \textbf{DNRTI} & \textbf{ATTACKER} & \textbf{APTNER} & \textbf{CYNER} \\
+\midrule
+\textbf{DNRTI}    & \textbf{0.69} & 0.40 & 0.27 & 0.20 \\
+\textbf{ATTACKER} & 0.44 & \textbf{0.69} & 0.39 & 0.48 \\
+\textbf{APTNER}   & 0.44 & 0.41 & \textbf{0.67} & 0.59 \\
+\textbf{CYNER}    & 0.29 & 0.38 & 0.35 & \textbf{0.78} \\
+\bottomrule
+\end{tabular}
+}%
+\caption{RoBERTa loose span-F1 on each development dataset after training on each dataset.}
+\label{tab:loose_span_f1_cross_dataset_roberta}
+\end{table}
+
+The largest strict-to-unlabelled jump is on the CYNER row (CYNER to DNRTI: 0.25 to 0.57; CYNER to APTNER: 0.32 to 0.58): the spans are correct but the coarse class is wrong.
+
+\subsection*{Appendix -- leakage removal counts}
+
+Sentences removed per training set (union of all four development sets): DNRTI 546, ATTACKER 207, APTNER 358, CYNER 25.

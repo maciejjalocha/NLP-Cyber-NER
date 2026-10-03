@@ -11,6 +11,14 @@ authors = [{ name = "Maciej Jalocha" }]
 readme = "README.md"
 classifiers = ["Programming Language :: Python :: 3"]
 requires-python = "~=3.12.0"
+dependencies = [
+    "datasets>=5.0.0",
+    "dotenv>=0.9.9",
+    "evaluate>=0.4.6",
+    "jsonlines>=4.0.0",
+    "loguru>=0.7.3",
+    "seqeval>=1.2.2",
+]
 
 
 [tool.ruff]
@@ -24,3 +32,8 @@ extend-select = ["I"] # Add import sorting
 [tool.ruff.lint.isort]
 known-first-party = ["nlp_cyber_ner"]
 force-sort-within-sections = true
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+]

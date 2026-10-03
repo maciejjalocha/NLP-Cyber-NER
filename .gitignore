@@ -3,6 +3,7 @@ artifacts/models/*.pt
 artifacts/train/*.txt
 artifacts/predictions/*.txt
 mlruns/
+extra_data/
 
 # Mac OS-specific storage files
 .DS_Store

@@ -1,6 +1,8 @@
+from collections.abc import Callable
 from pathlib import Path
 
 import jsonlines
+from sklearn.model_selection import train_test_split
 import torch
 
 from nlp_cyber_ner.config import INTERIM_DATA_DIR, PROCESSED_DATA_DIR
@@ -115,20 +117,81 @@ def clean_aptner(path: Path) -> None:
                     f_out.write(line + "\n")
 
 
-def unify_labels_aptner(path: Path) -> None:
+def unify_tag_aptner(tag: str) -> str:
     """
+    Map a single raw APTNER (BIOES) tag to the unified label space.
     All E- labels are converted to I- labels.
     All S- labels are converted to B- labels.
-    APT, SECTEAM -> Organization (respectively, B- and I-)
-    OS -> System (respectively, B- and I-)
-    VULNAME -> Vulnerability (respectively, B- and I-)
-    MAL -> Malware (respectively, B- and I-)
+    APT, SECTEAM -> Organization
+    OS -> System
+    VULNAME -> Vulnerability
+    MAL -> Malware
+    everything else -> O
     """
+    # Some published checkpoints carry a malformed, prefix-less label (e.g. CyBERT-APTNER's
+    # "PROT"); such a prediction is not a valid span and maps to O.
+    if tag == "O" or "-" not in tag:
+        return "O"
+    prefix, label = tag.split("-", 1)
 
+    if label == "APT" or label == "SECTEAM":
+        label = "Organization"
+    elif label == "OS":
+        label = "System"
+    elif label == "VULNAME":
+        label = "Vulnerability"
+    elif label == "MAL":
+        label = "Malware"
+    else:
+        return "O"
+
+    if prefix == "E":
+        prefix = "I"
+    elif prefix == "S":
+        prefix = "B"
+
+    return f"{prefix}-{label}"
+
+
+def unify_tag_dnrti(tag: str) -> str:
+    """
+    Map a single raw DNRTI tag to the unified label space (prefix unchanged).
+    HackOrg, SecTeam, Org -> Organization
+    Tool -> System
+    Exp, Way -> Vulnerability
+    SamFile -> Malware
+    everything else -> O
+    """
+    if tag == "O" or "-" not in tag:
+        return "O"
+    prefix, label = tag.split("-", 1)
+
+    if label == "HackOrg" or label == "SecTeam" or label == "Org":
+        label = "Organization"
+    elif label == "Tool":
+        label = "System"
+    elif label == "Exp" or label == "Way":
+        label = "Vulnerability"
+    elif label == "SamFile":
+        label = "Malware"
+    else:
+        return "O"
+
+    return f"{prefix}-{label}"
+
+
+def unify_labels(path: Path, unify_tag: Callable[[str], str], subdir: str) -> None:
+    """
+    Rewrite a cleaned conll file into the unified label space.
+
+    :param path: cleaned conll file to read
+    :param unify_tag: per-tag mapper (one of the ``unify_tag_*`` functions)
+    :param subdir: dataset subdirectory under ``PROCESSED_DATA_DIR`` to write into
+    """
     with (
         open(path, "r", encoding="utf-8") as f,
         open(
-            PROCESSED_DATA_DIR / "APTNer" / path.with_suffix(".unified").name,
+            PROCESSED_DATA_DIR / subdir / path.with_suffix(".unified").name,
             "w",
             encoding="utf-8",
         ) as f_out,
@@ -136,124 +199,79 @@ def unify_labels_aptner(path: Path) -> None:
         for line in f:
             line = line.strip()
             if line:
-                print(line)
                 tok = line.split()
                 assert len(tok) == 2
-                new_tag = tok[1]
-                if tok[1] != "O":
-                    prefix, label = tok[1].split("-")
-
-                    if label == "APT" or label == "SECTEAM":
-                        label = "Organization"
-                    elif label == "OS":
-                        label = "System"
-                    elif label == "VULNAME":
-                        label = "Vulnerability"
-                    elif label == "MAL":
-                        label = "Malware"
-                    else:
-                        label = "O"
-                        f_out.write(f"{tok[0]} O\n")
-                        continue
-
-                    if prefix == "E":
-                        prefix = "I"
-                    elif prefix == "S":
-                        prefix = "B"
-
-                    new_tag = f"{prefix}-{label}"
-                f_out.write(f"{tok[0]} {new_tag}\n")
+                f_out.write(f"{tok[0]} {unify_tag(tok[1])}\n")
             else:
                 f_out.write("\n")
+
+
+def unify_labels_aptner(path: Path) -> None:
+    """Rewrite a cleaned APTNER conll file into the unified label space."""
+    unify_labels(path, unify_tag_aptner, "APTNer")
 
 
 def unify_labels_dnrti(path: Path) -> None:
+    """Rewrite a cleaned DNRTI conll file into the unified label space."""
+    unify_labels(path, unify_tag_dnrti, "DNRTI")
+
+
+def clean_attacker(path: Path) -> None:
     """
-    HackOrg, SecTeam -> Organization (respectively, B- and I-)
-    Tool -> System (respectively, B- and I-)
-    Way -> Vulnerability (respectively, B- and I-)
-    SamFile -> Malware (respectively, B- and I-)
-    conll to conll
+    Reads the raw attacker JSONL and writes cleaned data in conll format.
+    Whitespace-only tokens are dropped (the only cleaning attacker needs).
+    The function saves cleaned data to the interim folder.
     """
-
-    with (
-        open(path, "r", encoding="utf-8") as f,
-        open(
-            PROCESSED_DATA_DIR / "DNRTI" / path.with_suffix(".unified").name, "w", encoding="utf-8"
-        ) as f_out,
-    ):
-        for line in f:
-            line = line.strip()
-            if line:
-                tok = line.split()
-                assert len(tok) == 2
-                new_tag = tok[1]
-                if tok[1] != "O":
-                    prefix, label = tok[1].split("-")
-
-                    if label == "HackOrg" or label == "SecTeam" or label == "Org":
-                        label = "Organization"
-                    elif label == "Tool":
-                        label = "System"
-                    elif label == "Exp" or label == "Way":
-                        label = "Vulnerability"
-                    elif label == "SamFile":
-                        label = "Malware"
-                    else:
-                        label = "O"
-                        f_out.write(f"{tok[0]} O\n")
-                        continue
-
-                    new_tag = f"{prefix}-{label}"
-                f_out.write(f"{tok[0]} {new_tag}\n")
-            else:
-                f_out.write("\n")
-
-
-def unify_labels_attacker(path: Path) -> None:
-    """
-    THREAT_ACTOR, GENERAL_IDENTITY -> Organization (respectively, B- and I-)
-    INFRASTRUCTURE, GENERAL_TOOL, ATTACK_TOOL -> Infrastructure (respectively, B- and I-)
-    VULNERABILITY -> Vulnerability (respectively, B- and I-)
-    MALWARE -> Malware (respectively, B- and I-)
-    Outputs a conll format!
-    """
+    # normalise the split naming to train/valid/test (raw uses "dev")
+    stem = "valid" if path.stem == "dev" else path.stem
     with (
         jsonlines.open(path) as reader,
-        open(path.with_suffix(".unified"), "w", encoding="utf-8") as f_out,
+        open(
+            INTERIM_DATA_DIR / "attacker" / f"{stem}.cleaned",
+            "w",
+            encoding="utf-8",
+        ) as f_out,
     ):
         for obj in reader:
             tags = obj["tags"]
             tokens = obj["tokens"]
-            n = len(tokens)
-            for i in range(n):
-                current_tag = tags[i]
-                token = tokens[i]
+            for token, tag in zip(tokens, tags):
                 if token == " ":
-                    # TODO: this is kind of cleaning part, if there is time, I would put it in a separate function
                     continue
-                if current_tag != "O":
-                    prefix, label = current_tag.split("-")
-
-                    if label == "THREAT_ACTOR" or label == "GENERAL_IDENTITY":
-                        label = "Organization"
-                    elif (
-                        label == "INFRASTRUCTURE"
-                        or label == "GENERAL_TOOL"
-                        or label == "ATTACK_TOOL"
-                    ):
-                        label = "System"
-                    elif label == "VULNERABILITY":
-                        label = "Vulnerability"
-                    elif label == "MALWARE":
-                        label = "Malware"
-                    else:
-                        label = "O"
-                        f_out.write(f"{token} O\n")
-                        continue
-                    current_tag = f"{prefix}-{label}"
-                f_out.write(f"{token} {current_tag}\n")
+                f_out.write(f"{token} {tag}\n")
             f_out.write("\n")
+
+
+def unify_tag_attacker(tag: str) -> str:
+    """
+    Map a single raw AttackER tag to the unified label space (prefix unchanged).
+    THREAT_ACTOR, GENERAL_IDENTITY -> Organization
+    INFRASTRUCTURE, GENERAL_TOOL, ATTACK_TOOL -> System
+    VULNERABILITY -> Vulnerability
+    MALWARE -> Malware
+    everything else -> O
+    """
+    if tag == "O" or "-" not in tag:
+        return "O"
+    prefix, label = tag.split("-", 1)
+
+    if label == "THREAT_ACTOR" or label == "GENERAL_IDENTITY":
+        label = "Organization"
+    elif label == "INFRASTRUCTURE" or label == "GENERAL_TOOL" or label == "ATTACK_TOOL":
+        label = "System"
+    elif label == "VULNERABILITY":
+        label = "Vulnerability"
+    elif label == "MALWARE":
+        label = "Malware"
+    else:
+        return "O"
+
+    return f"{prefix}-{label}"
+
+
+def unify_labels_attacker(path: Path) -> None:
+    """Rewrite a cleaned AttackER conll file into the unified label space."""
+    unify_labels(path, unify_tag_attacker, "attacker")
 
 
 def clean_dnrti(path: Path) -> None:
@@ -283,7 +301,7 @@ def clean_dnrti(path: Path) -> None:
                 f_out.write("\n")
 
 
-def read_iob2_file(path, word_index=0, tag_index=1):
+def read_iob2_file(path, word_index=0, tag_index=1) -> list[tuple[list[str], list[str]]]:
     """
     read in conll file with no comments
 
@@ -560,29 +578,22 @@ class Preprocess:
         return data_X, data_y
 
 
+def unify_tag_cyner(tag: str) -> str:
+    """
+    Map a single raw CyNER tag to the unified label space.
+    Indicator -> O; every other tag is kept as-is.
+    """
+    if tag == "O" or "-" not in tag:
+        return "O"
+    _, label = tag.split("-", 1)
+    if label == "Indicator":
+        return "O"
+    return tag
+
+
 def unify_labels_cyner(path: Path) -> None:
-    """
-    Indicator -> O
-    """
-    with (
-        open(path, "r", encoding="utf-8") as f,
-        open(
-            PROCESSED_DATA_DIR / "cyner" / path.with_suffix(".unified").name, "w", encoding="utf-8"
-        ) as f_out,
-    ):
-        for line in f:
-            line = line.strip()
-            if line:
-                tok = line.split()
-                assert len(tok) == 2
-                current_tag = tok[1]
-                if current_tag != "O":
-                    _, label = current_tag.split("-")
-                    if label == "Indicator":
-                        current_tag = "O"
-                f_out.write(f"{tok[0]} {current_tag}\n")
-            else:
-                f_out.write("\n")
+    """Rewrite a cleaned CyNER conll file into the unified label space."""
+    unify_labels(path, unify_tag_cyner, "cyner")
 
 
 def get_labels(
