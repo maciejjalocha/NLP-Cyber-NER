@@ -30,7 +30,7 @@ This project provides scripts to execute a variety of NER experiments for cybers
 - **Cross Dataset Model**: Trains and evaluates models across different datasets (e.g., train on one, evaluate on another).
 - **Multihead (Tokenmodel) Experiments**: Trains models with multiple heads for different datasets, supporting various architectural variants (e.g., tied/untied embeddings and LSTMs).
 - **LST-NER Model**: Cross-domain NER using label structure transfer with graph neural networks and optimal transport.
-- **BERT Baseline Model**: Standard BERT NER fine-tuning for baseline comparison.
+- **BERT Baseline Model**: Standard RoBERTa NER fine-tuning (no graph component) for baseline comparison.
 
 ```bash
 python nlp_cyber_ner/modeling/cross_dataset_model.py
@@ -39,8 +39,8 @@ python nlp_cyber_ner/modeling/*tokenmodel*.py # different
 
 # LST-NER and BERT Baseline (requires separate environment)
 **Before running:** Update the dataset paths in the configuration section of each script to match your desired dataset.
-python nlp_cyber_ner/modeling/train_lst_ner.py
-python nlp_cyber_ner/modeling/train_bert_baseline.py
+python -m models.train_lst_ner_aptner   # graph model; also _dnrti, _cyner, _attackner
+python -m models.BERT_APTNER            # baseline; also BERT_DNRTI, BERT_CYNER, BERT_ATTACKNER
 ```
 
 ### Experiment Tracking with MLflow
