@@ -1,0 +1,30 @@
+{
+  "APTNER": {
+    "lst_ner_f1": 0.4835164835164836,
+    "baseline_f1": 0.5090361445783133,
+    "diff": -0.02551966106182968,
+    "p_value": 0.0185,
+    "significant": true
+  },
+  "DNRTI": {
+    "lst_ner_f1": 0.6956521739130435,
+    "baseline_f1": 0.7178217821782179,
+    "diff": -0.022169608265174445,
+    "p_value": 0.0116,
+    "significant": true
+  },
+  "CYNER": {
+    "lst_ner_f1": 0.8064516129032258,
+    "baseline_f1": 0.76280834914611,
+    "diff": 0.0436432637571158,
+    "p_value": 0.0117,
+    "significant": true
+  },
+  "ATTACKNER": {
+    "lst_ner_f1": 0.4278074866310161,
+    "baseline_f1": 0.43661971830985913,
+    "diff": -0.008812231678843041,
+    "p_value": 0.3483,
+    "significant": false
+  }
+}
